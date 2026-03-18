@@ -6,13 +6,12 @@
     <title>CropSight | AI-Powered Crop Health Mapping</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <nav class="navbar">
         <div class="logo"> CropSight</div>
         <ul class="nav-links">
-            <li><a href="#" onclick="openModal()" class="btn-primary-outline">Sign In</a></li>
+            <li><a href="dashboard.html" class="btn-primary-outline">Sign In</a></li>
         </ul>
     </nav>
 
@@ -21,7 +20,7 @@
             <h1>See Your Farm <br><span class="highlight">Like Never Before</span></h1>
             <p>AI-powered aerial insights to detect crop stress and irrigation anomalies in under an hour. Supporting SDG Goal 2: Zero Hunger.</p>
             <div class="cta-group">
-                <a href="#" onclick="openModal()" class="btn-primary">Sign In</a>
+                <a href="dashboard.html" class="btn-primary">Sign In</a>
             </div>
         </div>
         <div class="hero-image">
@@ -42,147 +41,58 @@
             <div class="feature-card">
                 <div class="icon">🖼️</div>
                 <h3>Aerial Image Upload</h3>
-                <ul class="feature-list">
-                    <li>Upload drone or satellite images</li>
-                    <li>Simple interface for quick processing</li>
-                </ul>
+                <p>Upload drone or satellite images through a simple interface for rapid field processing.</p>
             </div>
             <div class="feature-card">
                 <div class="icon">🌿</div>
-                <h3>VARI-Based Crop Health Analysis</h3>
-                <ul class="feature-list">
-                    <li>Uses vegetation index to detect crop condition</li>
-                    <li>Works with normal RGB images</li>
-                </ul>
+                <h3>VARI-Based Health Analysis</h3>
+                <p>Leverages vegetation indices to instantly detect crop condition from standard RGB imagery.</p>
             </div>
             <div class="feature-card">
                 <div class="icon">🧠</div>
-                <h3>AI Clustering (KMeans)</h3>
-                <ul class="feature-list">
-                    <li>Automatically classifies crop zones:</li>
-                    <li class="sub-item">Healthy, Moderate, Unhealthy</li>
-                </ul>
+                <h3>AI Field Clustering</h3>
+                <p>Automatically classifies your entire field into distinct healthy, moderate, and unhealthy crop zones.</p>
             </div>
             <div class="feature-card">
                 <div class="icon">🗺️</div>
-                <h3>Interactive Crop Health Map</h3>
-                <ul class="feature-list">
-                    <li>Color-coded visualization of field health</li>
-                    <li>Zoom and explore different regions</li>
-                </ul>
+                <h3>Interactive Map</h3>
+                <p>Explore color-coded visualizations of your field health with seamless zoom and regional tracking.</p>
             </div>
             <div class="feature-card">
                 <div class="icon">🚁</div>
                 <h3>Live Drone Capturing</h3>
-                <ul class="feature-list">
-                    <li>Real-time video feed from drone</li>
-                    <li>Continuous monitoring and analysis</li>
-                </ul>
+                <p>Process real-time video feeds from your drones for continuous, on-demand field monitoring.</p>
             </div>
             <div class="feature-card">
                 <div class="icon">🔄</div>
                 <h3>Multi-Temporal Analysis</h3>
-                <ul class="feature-list">
-                    <li>Compare crop health across time periods</li>
-                    <li>Track growth trends and detect issues early</li>
-                </ul>
+                <p>Compare seasonal crop health against different time periods to track growth trends proactively.</p>
             </div>
             <div class="feature-card">
                 <div class="icon">⚡</div>
                 <h3>Edge Deployment</h3>
-                <ul class="feature-list">
-                    <li>Runs on local devices (offline support)</li>
-                    <li>Faster and more efficient processing</li>
-                </ul>
+                <p>Runs lightning fast on local devices with full offline support—no internet required in the field.</p>
             </div>
             <div class="feature-card">
                 <div class="icon">🎙️</div>
                 <h3>Voice Assistant</h3>
-                <ul class="feature-list">
-                    <li>Control system using voice commands</li>
-                    <li>Hands-free operation for farmers</li>
-                </ul>
+                <p>Control the dashboard completely hands-free using intuitive farm-focused voice commands.</p>
             </div>
-        </div>
-        <div class="feature-grid-bottom">
             <div class="feature-card">
                 <div class="icon">🤖</div>
-                <h3>LLM-Powered Smart Assistant</h3>
-                <ul class="feature-list">
-                    <li>Ask questions about crop health</li>
-                    <li>AI-generated insights and recommendations</li>
-                    <li>Acts like an intelligent farming advisor</li>
-                </ul>
+                <h3>Smart AI Assistant</h3>
+                <p>Ask unique questions about crop health and get actionable insights from your personalized AI farming advisor.</p>
             </div>
             <div class="feature-card">
                 <div class="icon">🚨</div>
-                <h3>Smart Alert & Notification System</h3>
-                <ul class="feature-list">
-                    <li>Automatically detects problem areas in crops</li>
-                    <li>Sends instant alerts ("Low vegetation in Zone 2")</li>
-                    <li>Makes system proactive, helping farmers act quickly</li>
-                </ul>
+                <h3>Smart Alerts</h3>
+                <p>Proactively detects problem areas and sends instant notifications so you can take rapid action.</p>
             </div>
         </div>
     </section>
 
-    <!-- Sign-in Modal -->
-    <div id="signin-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2>Sign In to CropSight</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Access your farm's insights.</p>
-            <!-- Replace YOUR_GOOGLE_CLIENT_ID with your actual Google Client ID -->
-            <div id="g_id_onload"
-                 data-client_id="YOUR_GOOGLE_CLIENT_ID" 
-                 data-callback="handleCredentialResponse"
-                 data-auto_prompt="false">
-            </div>
-            <div class="g_id_signin"
-                 data-type="standard"
-                 data-size="large"
-                 data-theme="outline"
-                 data-text="sign_in_with"
-                 data-shape="rectangular"
-                 data-logo_alignment="left">
-            </div>
-        </div>
-    </div>
-
     <footer>
         <p>&copy; 2026 CropSight. Built for the 24-Hour Hackathon.</p>
     </footer>
-
-    <script>
-        // Modal logic
-        const modal = document.getElementById("signin-modal");
-        
-        function openModal() {
-            modal.style.display = "flex";
-        }
-        
-        function closeModal() {
-            modal.style.display = "none";
-        }
-        
-        // Close modal if user clicks outside of it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
-
-        // Google Sign-in Callback
-        function handleCredentialResponse(response) {
-            console.log("Encoded JWT ID token: " + response.credential);
-            
-            // In a real app, you would send this token to your backend for verification
-            // e.g., POST /api/auth/google with the token
-            
-            // For now, save token and redirect to dashboard
-            localStorage.setItem("cropSightToken", response.credential);
-            window.location.href = "dashboard.html";
-        }
-    </script>
 </body>
 </html>
