@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CropSight | Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"> CropSight</div>
+        <ul class="nav-links">
+            <li><a href="#" class="active">Overview</a></li>
+            <li><a href="index.html" class="btn-secondary">Sign Out</a></li>
+        </ul>
+    </nav>
+
+    <div class="dashboard-wrapper">
+        <div class="dashboard-header">
+            <h2>Farm Overview</h2>
+            <p style="color: var(--text-secondary);">Upload aerial/drone imagery to generate a new crop health report.</p>
+        </div>
+
+        <!-- Analysis Results Section (Hidden by default) -->
+        <div id="results-section" style="display:none; animation: fadeIn 0.5s ease;">
+            <div class="dashboard-header" style="margin-bottom: 2rem;">
+                <h2>Analysis Complete</h2>
+                <p style="color: var(--text-secondary);">Here is the detailed breakdown of your aerial field scan.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <!-- Map Viewer -->
+                <div class="glass-card" style="padding: 1.5rem; display: flex; flex-direction: column; height: 100%;">
+                    <h3 style="margin-bottom: 1rem;">Field Heatmap Overlay</h3>
+                    <div style="flex:1; border-radius: 12px; overflow: hidden; position: relative; min-height: 250px;">
+                        <img id="result-map-img" src="" style="width: 100%; height: 100%; object-fit: cover; filter: contrast(1.1) saturate(1.2);">
+                        <div style="position: absolute; top:0; left:0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(34, 197, 94, 0.4) 40%, rgba(234, 179, 8, 0.6) 70%, rgba(239, 68, 68, 0.5) 100%); mix-blend-mode: multiply;"></div>
+                    </div>
+                </div>
+
+                <!-- Severity Breakdown -->
+                <div class="glass-card" style="padding: 2rem;">
+                    <h3 style="margin-bottom: 1.5rem;">Severity Breakdown</h3>
+                    
+                    <div class="stat-row">
+                        <div class="stat-header"><span>🌿 Healthy</span> <strong>65%</strong></div>
+                        <div class="stat-bar"><div style="width: 65%; background: var(--accent-emerald);"></div></div>
+                    </div>
+
+                    <div class="stat-row">
+                        <div class="stat-header"><span>💧 Water Stress</span> <strong>15%</strong></div>
+                        <div class="stat-bar"><div style="width: 15%; background: #3b82f6;"></div></div>
+                    </div>
+
+                    <div class="stat-row">
+                        <div class="stat-header"><span>🧪 Nutrient Stress</span> <strong>12%</strong></div>
+                        <div class="stat-bar"><div style="width: 12%; background: var(--accent-harvest);"></div></div>
+                    </div>
+
+                    <div class="stat-row">
+                        <div class="stat-header"><span>🐛 Pest Stress</span> <strong>8%</strong></div>
+                        <div class="stat-bar"><div style="width: 8%; background: #ef4444;"></div></div>
+                    </div>
+
+                    <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--glass-border);">
+                        <h4 style="margin-bottom: 1rem; color: var(--text-primary);">Time to Yield Simulation</h4>
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(59, 130, 246, 0.05); padding: 1.25rem; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.15);">
+                            <div>
+                                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.25rem;">Estimated Harvest</p>
+                                <strong id="yield-time-text" style="color: var(--text-primary); font-size: 1.1rem; display: block;">--</strong>
+                            </div>
+                            <div style="text-align: right;">
+                                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.25rem;">Trajectory</p>
+                                <span id="yield-status-badge" style="background: var(--accent-emerald); color: #fff; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--glass-border);">
+                        <h4 style="margin-bottom: 0.5rem; color: var(--text-primary);">AI Recommendation</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5;">Targeted irrigation required in the Southeast quadrant. Consider applying nitrogen-rich fertilizer to the affected stress zones.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <button class="btn-primary-outline" onclick="location.reload()">Upload Another Scan</button>
+                <button class="btn-primary" style="margin-left: 1rem;">Export PDF Report</button>
+            </div>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-section" id="upload-section" style="padding: 0; background: transparent; box-shadow: none; border: none;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <!-- Single Upload -->
+                <div class="glass-card drop-zone" id="drop-zone-single" style="margin: 0; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <div class="upload-icon" style="font-size: 3rem; margin-bottom: 1rem;">🖼️</div>
+                    <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);">Single Image Scan</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem; text-align: center;">Upload a single aerial image for detailed field analysis.</p>
+                    <label for="file-upload-single" class="btn-primary" style="cursor: pointer; display: inline-block;">Browse File</label>
+                    <input type="file" id="file-upload-single" accept="image/png, image/jpeg, image/tiff" hidden>
+                </div>
+
+                <!-- Bulk Upload -->
+                <div class="glass-card drop-zone" id="drop-zone-bulk" style="margin: 0; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid rgba(59, 130, 246, 0.3);">
+                    <div class="upload-icon" style="font-size: 3rem; margin-bottom: 1rem;">📁</div>
+                    <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);">Bulk Batch Upload</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem; text-align: center;">Upload multiple images at once to map an entire farm.</p>
+                    <label for="file-upload-bulk" class="btn-primary-outline" style="cursor: pointer; display: inline-block;">Browse Files</label>
+                    <input type="file" id="file-upload-bulk" accept="image/png, image/jpeg, image/tiff" multiple hidden>
+                </div>
+            </div>
+            
+            <div class="preview-container glass-card" id="preview-container" style="display:none; padding: 2rem; margin-top: 2rem;">
+                <h3 style="margin-bottom: 1.5rem;">Image Preview</h3>
+                <div class="image-preview-box" style="width: 100%; max-width: 600px; margin: 0 auto; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 4px solid var(--glass-border);">
+                    <img id="uploaded-image" src="" alt="Uploaded Aerial Image" style="width: 100%; height: auto; display: block; object-fit: cover;">
+                </div>
+                
+                <div class="upload-progress" id="upload-status" style="padding-top: 3rem;">
+                    <h3 style="margin-bottom: 1rem;">Analyzing with AI...</h3>
+                    <p style="color: var(--text-secondary);">Running VARI Analysis and KMeans clustering on the previewed region.</p>
+                    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 CropSight. Built for the 24-Hour Hackathon.</p>
+    </footer>
+
+    <script>
+        const dropZoneSingle = document.getElementById('drop-zone-single');
+        const dropZoneBulk = document.getElementById('drop-zone-bulk');
+        const fileInputSingle = document.getElementById('file-upload-single');
+        const fileInputBulk = document.getElementById('file-upload-bulk');
+        const previewContainer = document.getElementById('preview-container');
+        const uploadedImage = document.getElementById('uploaded-image');
+        const uploadStatus = document.getElementById('upload-status');
+        const progressFill = document.getElementById('progress-fill');
+        const uploadSectionGrid = document.querySelector('#upload-section > div');
+
+        function setupDropZone(dropZone, fileInput, isBulk) {
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+                dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+            });
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+                dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+            });
+            dropZone.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files, isBulk), false);
+            fileInput.addEventListener('change', function() { handleFiles(this.files, isBulk) });
+        }
+
+        setupDropZone(dropZoneSingle, fileInputSingle, false);
+        setupDropZone(dropZoneBulk, fileInputBulk, true);
+
+        function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+
+        async function handleFiles(files, isBulk) {
+            if (files.length > 0) {
+                const fileList = isBulk ? Array.from(files) : [files[0]];
+                const validFiles = fileList.filter(f => f.type.startsWith('image/'));
+                
+                if (validFiles.length > 0) {
+                    const imageUrl = URL.createObjectURL(validFiles[0]);
+                    uploadedImage.src = imageUrl;
+                    
+                    // Show Preview Container & hide the upload grid
+                    uploadSectionGrid.style.display = 'none';
+                    previewContainer.style.display = 'block';
+                    
+                    // Remove any previous bulk label if exists
+                    const existingLabel = document.getElementById('bulk-processing-label');
+                    if (existingLabel) existingLabel.remove();
+
+                    if (isBulk && validFiles.length > 1) {
+                        uploadedImage.insertAdjacentHTML('afterend', `<p id="bulk-processing-label" style="text-align:center; color:var(--text-secondary); margin-top:1rem; font-weight: 500;">Processing ${validFiles.length} images together...</p>`);
+                    }
+                    
+                    // Initialize Progress UI
+                    let progress = 0;
+                    uploadStatus.innerHTML = '<h3 style="margin-bottom: 1rem;">Analyzing with AI...</h3><p style="color: var(--text-secondary);">Connecting to backend engine to process image(s)...</p><div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width: 5%"></div></div>';
+                    const progressFillNew = document.getElementById('progress-fill');
+                    const interval = setInterval(() => { progress = Math.min(progress + 5, 90); progressFillNew.style.width = progress + '%'; }, 300);
+
+                    // Submit to Backend
+                    const formData = new FormData();
+                    validFiles.forEach(f => formData.append('crop_images', f));
+
+                    try {
+                        const response = await fetch('http://localhost:8000/analyze/', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        const data = await response.json();
+                        
+                        clearInterval(interval);
+                        progressFillNew.style.width = '100%';
+
+                        if (!response.ok) {
+                            alert(data.error || "Failed to analyze image(s).");
+                            location.reload();
+                            return;
+                        }
+
+                        // Store global
+                        window.analysisResults = data;
+
+                        setTimeout(() => {
+                            uploadStatus.innerHTML = '<h3 style="color: var(--accent-emerald);">Analysis Complete!</h3><p>Your severity index map is ready.</p><button class="btn-primary" style="margin-top:1.5rem;" onclick="showResults()">View Full Report</button>';
+                        }, 500);
+                        
+                    } catch(err) {
+                        clearInterval(interval);
+                        alert("Network error. Backend might not be running.");
+                        location.reload();
+                    }
+                } else {
+                    alert("Please upload a valid image file (PNG, JPEG, etc).");
+                }
+            }
+        }
+
+        function showResults() {
+            // Hide upload section wrapper Elements
+            document.getElementById('upload-section').style.display = 'none';
+            document.querySelector('.dashboard-header').style.display = 'none';
+            // Render stats based on backend results
+            if (window.analysisResults && window.analysisResults.breakdown) {
+                // Set precise dynamic heatmap overlay
+                if (window.analysisResults.heatmap_image) {
+                    document.getElementById('result-map-img').src = "data:image/jpeg;base64," + window.analysisResults.heatmap_image;
+                    // Hide the fake CSS gradient overlay!
+                    const fakeOverlay = document.querySelector('.glass-card div[style*="background: linear-gradient"]');
+                    if (fakeOverlay) fakeOverlay.style.display = 'none';
+                } else {
+                    document.getElementById('result-map-img').src = uploadedImage.src;
+                }
+
+                const bd = window.analysisResults.breakdown;
+                const statBars = document.querySelectorAll('.stat-row .stat-bar div');
+                const statValues = document.querySelectorAll('.stat-row .stat-header strong');
+                
+                statValues[0].innerText = bd.healthy + '%'; statBars[0].style.width = bd.healthy + '%'; // Healthy
+                statValues[1].innerText = bd.water_stress + '%'; statBars[1].style.width = bd.water_stress + '%'; // Water
+                statValues[2].innerText = bd.nutrient_stress + '%'; statBars[2].style.width = bd.nutrient_stress + '%'; // Nutrient
+                statValues[3].innerText = bd.pest_stress + '%'; statBars[3].style.width = bd.pest_stress + '%'; // Pest
+
+                // Best recommendation: Find worst zone
+                const pEl = document.querySelector('.glass-card p[style*="font-size: 0.95rem"]');
+                if (pEl && window.analysisResults.zones_data) {
+                    const worstZone = window.analysisResults.zones_data.reduce((prev, current) => (prev.score < current.score) ? prev : current);
+                    pEl.innerText = worstZone.status === "Healthy" ? "Field looks healthy. Maintain regular schedule." : worstZone.recommended_action;
+                }
+                
+                // Yield Simulation
+                if (window.analysisResults.yield_simulation) {
+                    document.getElementById('yield-time-text').innerText = window.analysisResults.yield_simulation.estimated_days;
+                    const badge = document.getElementById('yield-status-badge');
+                    const status = window.analysisResults.yield_simulation.status;
+                    badge.innerText = status;
+                    
+                    if (status === "On Track") badge.style.background = "var(--accent-emerald)";
+                    else if (status === "Slight Delay") badge.style.background = "#eab308";
+                    else if (status === "Delayed") badge.style.background = "var(--accent-harvest)";
+                    else badge.style.background = "#ef4444";
+                }
+            }
+            
+            // Show results
+            document.getElementById('results-section').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
